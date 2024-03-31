@@ -1,8 +1,8 @@
 import requests
 
 # endpoint = "https://httpbin.org/status/200/"
-endpoint = "https://httpbin.org/anything"
-# endpoint = "http://localhost:8000/api/" #http://127.0.0.1:8000/ 
+# endpoint = "https://httpbin.org/anything"
+endpoint = "http://localhost:8000/apis/" #http://127.0.0.1:8000/ 
 
 # get_response = requests.post(endpoint, json={"title": "Abc123", "content": "Hello world", "price": "abc134"}) # HTTP Request
 # print(get_response.headers)
@@ -13,5 +13,6 @@ endpoint = "https://httpbin.org/anything"
 # REST API HTTP Request -> JSON
 # JavaScript Object Nototion ~ Python Dict
 get_response = requests.get(endpoint)
-print(get_response.json())
+print(get_response.text)
+print(get_response.json()['message'])
 print(get_response.status_code)
