@@ -11,6 +11,6 @@ print(get_response.status_code)
 # HTTP Request -> HTML
 # REST API HTTP Request -> JSON
 # JavaScript Object Nototion ~ Python Dict
-get_response = requests.get(endpoint)
-print(get_response.json())
-print(get_response.status_code)
+# get_response = requests.get(endpoint)
+# print(get_response.json())
+# print(get_response.status_code)
