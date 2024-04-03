@@ -13,4 +13,3 @@ print(get_response.status_code)
 # JavaScript Object Nototion ~ Python Dict
 # get_response = requests.get(endpoint)
 # print(get_response.json())
-# print(get_response.status_code)
