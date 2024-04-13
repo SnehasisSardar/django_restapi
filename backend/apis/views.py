@@ -22,3 +22,5 @@ def api_home(request,*args,**kwargs):
         print(serializer.data)
     
         return Response(serializer.data)
+    
+    return Response({'Invalid data'},status=400)
