@@ -8,20 +8,25 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
     serializer_class = ProductSerializer
     # lookup_field = 'pk'
 
-class ProductCreateAPIView(generics.CreateAPIView):
+
+class ProductUpdateAPIView(generics.UpdateAPIView):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
-    # lookup_field = 'pk'
+    lookup_field = 'pk'
     
-    def perform_create(self, serializer):
-        # serializer.save(user=self.request.user)
-        # print(serializer.validated_data)
-        title = serializer.validated_data.get('title')
-        content=serializer.validated_data.get('content') or None 
-        if content is None:
-            content = title
-        
-        serializer.save(content=content)
+    def perform_update(self, serializer):
+        instance = serializer.save()
+        if not instance.content:
+            instance.content = instance.title
+            # #
+
+class ProductDeleteAPIView(generics.DestroyAPIView):
+    queryset= Product.objects.all()
+    serializer_class = ProductSerializer
+    lookup_field = 'pk'
+
+    def perform_destroy(self,instance):
+        super().perform_destroy(instance)
 
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset= Product.objects.all()
@@ -33,4 +38,4 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         if content is None:
             content = title
 
-            serializer.save(content=content)
+        serializer.save(content=content)
