@@ -1,4 +1,4 @@
-from rest_framework import generics
+from rest_framework import generics, mixins
 
 from .models import Product
 from .serializers import ProductSerializer
@@ -39,3 +39,12 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
             content = title
 
         serializer.save(content=content)
+
+class ProductMixinView(
+    mixins.ListModelMixin,
+    generics.GenericAPIView):
+    queryset= Product.objects.all()
+    serializer_class = ProductSerializer
+
+    def get(self, request, *args, **kwargs):
+        return self.list(request, *args, **kwargs)
