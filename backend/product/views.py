@@ -45,27 +45,51 @@ class ProductMixinView(
     mixins.ListModelMixin,
     mixins.RetrieveModelMixin,
     mixins.CreateModelMixin,
+    mixins.UpdateModelMixin,
+    mixins.DestroyModelMixin,
     generics.GenericAPIView):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field= 'pk'
 
     def get(self, request, *args, **kwargs):
-        print(args,kwargs)
+        # print(args,kwargs)
         pk = kwargs.get("pk")
         if pk is not None:
             return self.retrieve(request, *args, **kwargs)
         return self.list(request, *args, **kwargs)
     
-    def post(self, request, *args, **kwargs):
+    def post(self,request, *args, **kwargs):
         return self.create(request, *args, **kwargs)
     
+    def perform_create(self, serializer):
+        title = serializer.validated_data.get('title')
+        content = serializer.validate_data.get('content') or None
+        if content is None:
+            content = title
+        serializer.save(content=content)
+
+    def put(self,request, *args, **kwargs):
+        pk= kwargs.get("pk")
+        if pk is not None:
+            return self.update(request, *args, **kwargs)
+
+    # def perform_update(self, serializer):
+    #     instance= serializer.save()
+    #     # if not instance.content:
+        #     instance.content = instance.title
+
+    def delete(self,request, *args, **kwargs):
+        pk= kwargs.get("pk")
+        if pk is not None:
+            return self.destroy(request, *args, **kwargs)
+
 
 
 @api_view(['GET', 'POST'])
 def product_alt_view(request, pk=None, *args, **kwargs):
     method = request.method  
-
+    pk=kwargs.get("pk") #If using this no need to put pk=None
     if method == "GET":
         if pk is not None:
             # detail view
