@@ -4,12 +4,12 @@ from rest_framework.decorators import api_view
 from django.shortcuts import get_object_or_404
 
 from apis.authentication import TokenAuthentication
-
+from apis.mixins import StaffEditorPermissionMixin
 from .models import Product
 from .serializers import ProductSerializer
-from .permissions import IsStaffEditorPermission
+from apis.permissions import IsStaffEditorPermission
 
-class ProductDetailsAPIView(generics.RetrieveAPIView):
+class ProductDetailsAPIView(generics.RetrieveAPIView,StaffEditorPermissionMixin):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     # lookup_field = 'pk'
@@ -17,8 +17,9 @@ class ProductDetailsAPIView(generics.RetrieveAPIView):
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication]
-    permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
+    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication] 
+    # Added the default in the settings of cfehome
+    permission_classes= [permissions.IsAdminUser,IsStaffEditorPermission] # Added via mixins
 
     def perform_create(self,serializer):
         title = serializer.validated_data.get('title')
@@ -28,11 +29,11 @@ class ProductListCreateAPIView(generics.ListCreateAPIView):
         serializer.save(content=content)
 
 
-class ProductUpdateAPIView(generics.UpdateAPIView):
+class ProductUpdateAPIView(generics.UpdateAPIView,StaffEditorPermissionMixin):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes= IsStaffEditorPermission
+    permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
     
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -44,7 +45,7 @@ class ProductDeleteAPIView(generics.DestroyAPIView):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes= IsStaffEditorPermission
+    permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_destroy(self,instance):
         super().perform_destroy(instance)
@@ -55,9 +56,10 @@ class ProductMixinView(
     mixins.CreateModelMixin,
     mixins.UpdateModelMixin,
     mixins.DestroyModelMixin,
-    generics.GenericAPIView):
+    generics.GenericAPIView,StaffEditorPermissionMixin):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
+    # permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
     lookup_field= 'pk'
 
     def get(self, request, *args, **kwargs):
