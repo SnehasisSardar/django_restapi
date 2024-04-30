@@ -17,9 +17,9 @@ class ProductDetailsAPIView(generics.RetrieveAPIView,StaffEditorPermissionMixin)
 class ProductListCreateAPIView(generics.ListCreateAPIView):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
-    authentication_classes = [authentication.SessionAuthentication,TokenAuthentication] 
+    # authentication_classes = [authentication.SessionAuthentication,TokenAuthentication] 
     # Added the default in the settings of cfehome
-    permission_classes= [permissions.IsAdminUser,IsStaffEditorPermission] # Added via mixins
+    # permission_classes= [permissions.IsAdminUser,IsStaffEditorPermission] # Added via mixins
 
     def perform_create(self,serializer):
         title = serializer.validated_data.get('title')
@@ -33,7 +33,7 @@ class ProductUpdateAPIView(generics.UpdateAPIView,StaffEditorPermissionMixin):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
+    # permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
     
     def perform_update(self, serializer):
         instance = serializer.save()
@@ -41,11 +41,11 @@ class ProductUpdateAPIView(generics.UpdateAPIView,StaffEditorPermissionMixin):
             instance.content = instance.title
             # #
 
-class ProductDeleteAPIView(generics.DestroyAPIView):
+class ProductDeleteAPIView(generics.DestroyAPIView,StaffEditorPermissionMixin):
     queryset= Product.objects.all()
     serializer_class = ProductSerializer
     lookup_field = 'pk'
-    permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
+    # permission_classes= [permissions.IsAdminUser, IsStaffEditorPermission]
 
     def perform_destroy(self,instance):
         super().perform_destroy(instance)
