@@ -20,5 +20,6 @@ from django.urls import path,include
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('apis/',include('apis.urls')),
-    path('apis/product/',include('product.urls'))
+    path('apis/product/',include('product.urls')),
+    path('apis/v2/',include('cfehome.routers')),
 ]
